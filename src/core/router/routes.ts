@@ -1,9 +1,9 @@
 import {RouteConfig} from 'vue-router';
 import History from '@/components/History/History.vue';
 import Scheduler from '@/components/Scheduler/Scheduler.vue';
-import Home from '../components/Home/Home.vue';
-import Login from '../components/Auth/Login/Login.vue';
-import Registration from '../components/Auth/Registration/Registration.vue';
+import Home from '@/core/components/Home/Home.vue';
+import Login from '@/core/components/Auth/Login/Login.vue';
+import Registration from '@/core/components/Auth/Registration/Registration.vue';
 
 export const routes: Array<RouteConfig> = [
     {

@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import ValidationRules from '../../../mixins/ValidationRules';
+import ValidationRules from '@/core/mixins/ValidationRules';
 
 export default {
     mixins: [ValidationRules],
