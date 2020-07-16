@@ -9,7 +9,7 @@
                         sm6
                         md4
                         v-for="sphere of spheres"
-                        :key="sphere.id"
+                        :key="sphere.sphere.id"
                 >
                     <v-card
                             class="mx-auto"
@@ -18,23 +18,22 @@
                         <v-img
                                 class="white--text align-end"
                                 height="200px"
-                                :src="sphere.imageSrc"
+                                :src="sphere.sphere.imageSrc"
                         >
-                            <!--<v-card-title>Top 10 Australian beaches</v-card-title>-->
                         </v-img>
 
-                        <v-card-title>{{sphere.name}}</v-card-title>
+                        <v-card-title>{{sphere.sphere.name}}</v-card-title>
                         <!--<v-card-subtitle class="pb-0">Number 10</v-card-subtitle>-->
 
                         <v-card-text class="text--primary">
-                            <div>{{sphere.description}}</div>
+                            <div>{{sphere.sphere.description}}</div>
                         </v-card-text>
 
                         <v-card-actions>
                             <v-spacer/>
                             <v-btn
                                     text
-                                    :to="'/create/lead' + sphere.id"
+                                    :to="'/create/lead/' + sphere.sphere.id"
                             >
                                 Open
                             </v-btn>

@@ -1,9 +1,10 @@
 import {RouteConfig} from 'vue-router';
-import History from '@/components/History/History.vue';
-import Scheduler from '@/components/Scheduler/Scheduler.vue';
-import Home from '@/core/components/Home/Home.vue';
-import Login from '@/core/components/Auth/Login/Login.vue';
-import Registration from '@/core/components/Auth/Registration/Registration.vue';
+import History from '@/components/History.vue';
+import Scheduler from '@/components/Scheduler.vue';
+import Home from '@/core/components/Home.vue';
+import Login from '@/core/components/Auth/Login.vue';
+import Registration from '@/core/components/Auth/Registration.vue';
+import SphereLeadForm from '@/core/components/SphereLeadForm.vue';
 
 export const routes: Array<RouteConfig> = [
     {
@@ -30,5 +31,11 @@ export const routes: Array<RouteConfig> = [
         path: '/scheduler',
         name: 'scheduler',
         component: Scheduler,
+    },
+    {
+        path: '/create/lead/:id',
+        props: true,
+        name: 'lead',
+        component: SphereLeadForm,
     },
 ];

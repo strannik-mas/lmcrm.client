@@ -70,6 +70,7 @@ export const actions: ActionTree<ProfileState, RootState> = {
                     localStorage.setItem('token', data.access_token);
                     user.firstName = data.first_name;
                     user.lastName = data.last_name;
+                    user.phone = data.phone;
                     user.state = data.state;
                     commit('profileLoaded', user);
                 } else {

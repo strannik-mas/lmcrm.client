@@ -17,17 +17,17 @@ export const actions: ActionTree<SphereState, RootState> = {
             }).then((response: AxiosResponse<any>) => {
                 const data = response && response.data;
                 console.log(data);
-                if (data.status === 'success') {
-                    Object.keys(data.spheres).forEach((key: any) => {
+                if (data.status === 'success' && typeof data.spheres !== 'undefined') {
+                    /*Object.keys(data.spheres).forEach((key: any) => {
                         const sphereObj: Sphere = {
-                            id: data.spheres[key].id,
-                            name: data.spheres[key].name,
+                            id: data.spheres[key].sphere.id,
+                            name: data.spheres[key].sphere.name,
                             description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus, nesciunt.',
                             imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
                         };
                         resultSpheres.push(sphereObj);
-                    });
-                    commit('spheresLoaded', resultSpheres);
+                    });*/
+                    commit('spheresLoaded', data.spheres);
                 }
             }, (error) => {
                 console.log(error);

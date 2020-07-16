@@ -1,8 +1,8 @@
 import {MutationTree} from 'vuex';
-import {Sphere, SphereState} from './types';
+import {SphereArr, SphereState} from './types';
 
 export const mutations: MutationTree<SphereState> = {
-    spheresLoaded(state, payload: Array<Sphere>) {
+    spheresLoaded(state, payload: Array<SphereArr>) {
         state.error = false;
         state.spheres = payload;
     },

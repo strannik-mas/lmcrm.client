@@ -20,9 +20,10 @@ module.exports = {
         'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'indent': ["error", 4, { "SwitchCase": 1 }],
-        'max-len': ["error", { "code": 120, "tabWidth": 4 }],
+        'max-len': ["error", { "code": 120, "tabWidth": 4, "ignoreUrls": true, "ignoreStrings": true }],
         'quotes': ["error", "single", { "allowTemplateLiterals": true, "avoidEscape": true }],
         'object-curly-spacing': ["error", "never"],
+        'no-plusplus': 0,
         'import/prefer-default-export': 'off',
         'spaced-comment': ["error", "never"],
         'space-unary-ops': [
