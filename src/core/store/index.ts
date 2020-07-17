@@ -21,6 +21,21 @@ const store: StoreOptions<RootState> = {
         clearError(state: RootState) {
             state.errors = null;
         },
+        delError(state: RootState, payload: string) {
+            if (state.errors !== null) {
+                //eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                //@ts-ignore
+                delete state.errors[payload];
+                /*const keysArr = Object.keys(state.errors);
+                for (let i = 0; i < keysArr.length; i++) {
+                    if (keysArr[i] === payload) {
+                        //eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                        //@ts-ignore
+                        delete state.errors[keysArr[i]];
+                    }
+                }*/
+            }
+        },
     },
     actions: {
         setLoading({commit}: any, payload: boolean) {
@@ -28,6 +43,9 @@ const store: StoreOptions<RootState> = {
         },
         setError({commit}: any, payload: ValidationErrors) {
             commit('setError', payload);
+        },
+        delError({commit}: any, payload: string) {
+            commit('delError', payload);
         },
         clearError({commit}: any) {
             commit('clearError');

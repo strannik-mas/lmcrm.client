@@ -3,9 +3,11 @@
             class="fill-height Login d-flex justify-center"
             fluid
     >
-        <v-alert type="error" v-if="errors">
-            Invalid login or password
-        </v-alert>
+        <div class="alert__msg">
+            <v-alert type="error" v-if="errors">
+                Invalid login or password
+            </v-alert>
+        </div>
         <v-row
                 align="center"
                 justify="center"
@@ -103,3 +105,10 @@ export default {
     },
 };
 </script>
+
+<style lang="scss">
+    .alert__msg {
+        position: absolute;
+        top: 75px;
+    }
+</style>

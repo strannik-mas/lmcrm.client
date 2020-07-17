@@ -1,67 +1,73 @@
 <template>
-    <div class="SphereLeadForm pt-8" v-if="typeof sphereById !== 'undefined'">
-        <!--<h1 class="text--primary text-center">Create lead</h1>
-        <h2 class="text&#45;&#45;secondary text-center">Sphere: {{sphereById.sphere.name}}</h2>-->
-        <h1 class="sphere__header">
-            <svg xmlns="http://www.w3.org/2000/svg" id="textSpans" class="svg__lead">
-                <defs>
-                    <path id="wavyPath2"
-                          d="M 10 80 C 160 10 210 10 360 80" />
-                    <pattern id="myFontFill" width="100" height="100" patternUnits="userSpaceOnUse">
-                        <image xlink:href="/img/wood.jpg"
-                               x="0" y="0" width="1000" height="1000"/>
-                    </pattern>
-                </defs>
-                <text font-size="50" fill="url(#myFontFill)" class="lead__text">
-                    <textPath xlink:href="#wavyPath2">
-                        <tspan>CREATE LEAD</tspan>
-                    </textPath>
-                </text>
-            </svg>
-        </h1>
-        <h2 class="sphere__header">
-            <svg xmlns="http://www.w3.org/2000/svg" class="svg__sphere">
-                <text fill="url(#myFontFill)" class="sphere__text">
-                    Sphere: {{sphereById.sphere.name}}
-                </text>
-            </svg>
-        </h2>
-        <v-form ref="form" id="leadForm">
+    <div class="SphereLeadForm pt-2" v-if="typeof sphereById !== 'undefined'">
+        <h1 class="text--primary text-center">Create lead</h1>
+        <h2 class="text--secondary text-center">Sphere: {{sphereById.sphere.name}}</h2>
+        <v-alert
+                v-model="alert"
+                :type="alertType"
+                @close="alert = !alert"
+                dismissible
+                light
+                class="ma-3"
+                id="alertMessage"
+        >{{alertText}}</v-alert>
+        <v-form ref="form" id="leadForm" v-if="alertType !== 'success'">
             <input type="hidden" name="sphere_id" :value="sphereById.sphere.id">
             <input type="hidden" name="source" value="client">
             <div
-                    class="form-group pa-10"
+                    class="form-group pr-3 pl-3 pb-2"
                     v-for="(attribute, index) in attributes"
                     :key="index"
             >
-                <div class="attr__card">
                     <v-card
-                        class="mx-auto pa-5"
+                        class="mx-auto pa-2"
                         :id="attribute.name"
-                        color="#cccccc75"
-                >
-                    <i
-                            class="ic ma-3"
-                            :style="{
+                        :color="(validationErrors &&
+                                 (typeof validationErrors[attribute.name] !== 'undefined' ||
+                                  typeof validationErrors['fields.' + attribute.name] !== 'undefined')) ?
+                                   '#FFC9C990' : '#cccccc75'"
+                    >
+                        <v-layout v-if="attribute.type !== 'text'
+                            && attribute.type !== 'tel'  && attribute.type !== 'email'">
+                            <i
+                                    class="ic ma-3"
+                                    :style="{
                             backgroundImage: 'url(' + attribute.icon + ')'
                         }"
-                    />
-                    <v-flex xs12 :style="{display: 'inline-block', verticalAlign: 'top'}">
-                        <div class="title contact-attr-title mt-3">
-                            {{ attribute.label }}
-                        </div>
-                    </v-flex>
+                            />
+                            <v-flex xs12 :style="{display: 'inline-block', verticalAlign: 'top'}">
+                                <div class="title contact-attr-title mt-3">
+                                    {{ attribute.label }}
+                                </div>
+                            </v-flex>
+                        </v-layout>
 
-                    <v-flex xs12>
-                        <v-text-field
+                    <v-flex xs12
                             v-if="attribute.type === 'text' || attribute.type === 'tel'  || attribute.type === 'email'"
+                    >
+                        <i
+                                class="ic__text"
+                                :style="{
+                            backgroundImage: 'url(' + attribute.icon + ')'
+                        }"
+                        />
+                        <v-text-field
                             :type="attribute.type"
                             :name="attribute.name"
                             :value="getValue(attribute.name)"
+                            :label="attribute.label"
                             :required="attribute.name === 'name' || attribute.name === 'phone'"
                             @input="setColor(attribute.name, attribute.type)"
                             font-size="1em"
+                            class="ml-7"
                         />
+                        <div class="error--text" v-if="validationErrors &&
+                                 typeof validationErrors[attribute.name] !== 'undefined'">
+                            <p
+                                    v-for="(error, index) in validationErrors[attribute.name]"
+                                    :key="index"
+                            >{{error}}</p>
+                        </div>
                     </v-flex>
 
                     <v-flex xs12 v-if="attribute.type === 'date'">
@@ -95,11 +101,8 @@
                         </v-menu>
                     </v-flex>
 
-                    <v-flex xs12>
-                        <v-radio-group
-                                row wrap
-                                v-if="attribute.type === 'radio'"
-                        >
+                    <v-flex xs12 v-if="attribute.type === 'radio'">
+                        <v-radio-group row wrap>
                             <v-flex
                                     lg3
                                     md4
@@ -116,10 +119,17 @@
                                 />
                             </v-flex>
                         </v-radio-group>
+                        <div class="error--text" v-if="validationErrors &&
+                                 typeof validationErrors['fields.' + attribute.name] !== 'undefined'">
+                            <p
+                                    v-for="(error, index) in validationErrors['fields.' + attribute.name]"
+                                    :key="index"
+                            >{{error}}</p>
+                        </div>
                     </v-flex>
 
-                    <v-flex xs12>
-                        <v-layout v-if="attribute.type === 'checkbox'" row wrap>
+                    <v-flex xs12 class="pa-3" v-if="attribute.type === 'checkbox'">
+                        <v-layout row wrap>
                             <v-flex
                                     lg3
                                     md4
@@ -136,6 +146,15 @@
                                 />
                             </v-flex>
                         </v-layout>
+                        <div
+                                class="error--text"
+                                v-if="validationErrors &&
+                                 typeof validationErrors['fields.' + attribute.name] !== 'undefined'">
+                            <p
+                                    v-for="(error, index) in validationErrors['fields.' + attribute.name]"
+                                    :key="index"
+                            >{{error}}</p>
+                        </div>
                     </v-flex>
                     <v-textarea
                             v-if="attribute.type === 'textarea'"
@@ -144,14 +163,6 @@
                             @input="setColor(attribute.name, attribute.type)"
                     />
                 </v-card>
-                    <div
-                            class="attr__card__pin"
-                            :style="{
-                                backgroundImage:
-                                 `url(/img/pin_${Math.floor(Math.random() * 8) + 1}.png)`
-                            }"
-                    ></div>
-                </div>
             </div>
 
             <div class="lead__actions">
@@ -176,6 +187,7 @@
 
 <script>
 import axios from 'axios';
+import * as easings from 'vuetify/es5/services/goto/easing-patterns';
 
 export default {
     props: ['id'],
@@ -196,10 +208,27 @@ export default {
         getUser() {
             return this.$store.getters['user/userObj'];
         },
-        pinURL() {
-            console.log(Math.floor(Math.random() * 8) + 1);
-            return `${process.env.BASE_URL}img/pin_${
-                Math.floor(Math.random() * 8) + 1}.png`;
+        validationErrors() {
+            const {errors} = this.$store.getters;
+            let target = '';
+            if (errors && typeof errors !== 'undefined') {
+                if (errors.hasOwnProperty('name')) {
+                    target = '#name';
+                } else if (errors.hasOwnProperty('phone')) {
+                    target = '#phone';
+                }
+
+                if (target !== '') {
+                    this.$vuetify.goTo(target, {
+                        duration: 300,
+                        offset: 0,
+                        easing: 'easeInOutCubic',
+                    });
+                }
+                console.log(errors);
+                return errors;
+            }
+            return null;
         },
     },
     watch: {
@@ -214,6 +243,9 @@ export default {
             menu1: false,
             name: '',
             phone: '',
+            alert: false,
+            alertType: null,
+            alertText: '',
         };
     },
     methods: {
@@ -235,21 +267,33 @@ export default {
                     const dataResp = response && response.data;
                     console.log(dataResp);
                     if (dataResp.status === 'success') {
+                        this.$store.dispatch('setError', null, {root: true});
+                        this.alert = true;
+                        this.alertText = 'Lead created successfully!';
+                        this.alertType = 'success';
+
+                        let route = '/';
                         if (this.isUserLoggedIn) {
-                            this.$router.push('/history');
-                        } else {
-                            this.$router.push('/');
+                            route = '/history';
                         }
+                        this.$vuetify.goTo('#alertMessage', {
+                            duration: 300,
+                            offset: 0,
+                            easing: 'easeInOutCubic',
+                        });
+                        setTimeout(() => { this.$router.push(route); }, 2000);
                     }
                     if (typeof dataResp.error !== 'undefined') {
+                        console.log(dataResp.error);
                         this.$store.dispatch('setError', dataResp.error, {root: true});
-                        console.log(this.errors);
+                        this.alert = true;
+                        this.alertText = 'Lead can\'t create. Please, fix some errors on form';
+                        this.alertType = 'warning';
                     }
                 })
                     .catch((response) => {
-                    //handle error
-                        console.log(response.errors);
                         this.$store.dispatch('setError', response.errors, {root: true});
+                        console.log(response.errors);
                     });
             } catch (error) {
                 console.log(error);
@@ -271,6 +315,7 @@ export default {
         setColor(name, type) {
             let collections = [];
             let val = '';
+            let field = name;
             if (type === 'text' || type === 'tel' || type === 'email' || type === 'textarea') {
                 collections = document.getElementsByName(name);
                 val = collections[0].value;
@@ -278,12 +323,10 @@ export default {
                 collections = document.getElementsByName(`fields[${name}]`);
                 val = this.dateFormatted;
             } else if (type === 'radio' || type === 'checkbox') {
+                field = `fields.${name}`;
                 collections = document.getElementById(name).getElementsByTagName('input');
                 //const res = [].filter.call(collections, (node) => node.checked === true);
-                console.log(collections);
-                //console.log(this);
                 for (let i = 0; i < collections.length; i++) {
-                    console.log(collections[i].checked);
                     if (collections[i].checked) {
                         val = 'checked';
                         break;
@@ -292,11 +335,15 @@ export default {
             }
 
             if (typeof collections[0] !== 'undefined') {
-                //console.dir(collections[0]);
-                //console.log(collections[0].value);
                 if (val !== '') {
                     //document.getElementById(name).style.background = 'none';
                     document.getElementById(name).style.backgroundColor = '#c5e1a590';
+
+                    this.deleteError(field);
+                    const errorDiv = document.getElementById(name).getElementsByClassName('error--text')[0];
+                    if (typeof errorDiv !== 'undefined') {
+                        errorDiv.style.display = 'none';
+                    }
                 } else {
                     document.getElementById(name).style.backgroundColor = '#cccccc85';
                 }
@@ -305,7 +352,6 @@ export default {
         getValue(name) {
             if (this.isUserLoggedIn) {
                 const user = this.getUser;
-                console.log(user);
                 switch (name) {
                     case 'name':
                         return `${user.firstName} ${user.lastName}`;
@@ -319,6 +365,9 @@ export default {
             }
             return null;
         },
+        deleteError(field) {
+            this.$store.dispatch('delError', field, {root: true});
+        },
     },
     mounted() {
         if (this.isUserLoggedIn) {
@@ -326,24 +375,13 @@ export default {
             this.setColor('phone', 'text');
             this.setColor('email', 'text');
         }
+        this.$store.dispatch('setError', null, {root: true});
     },
 };
 </script>
 
 <style lang="scss">
-    //Variables
-    $headerWidth: 500px;
-    $headerLeadWidth: 368px;
-    $pinWidth: 50px;
-    $pinOffset: -20px;
-
-    .SphereLeadForm {
-        //background: url('https://www.aduvan.ru/wp-content/uploads/photo-gallery/paper-texturs/paper-texture_(4).jpg');
-        background: url('https://www.aduvan.ru/wp-content/uploads/photo-gallery/wood-texturs/wood-texture_(6).jpg');
-        //background: url('https://3djungle.ru/upload/iblock/100/10014217f50ae2614e527276c47a64dd.jpg');
-    }
-
-    i.ic {
+    i.ic, .ic__text {
         height: 30px;
         width: 30px;
         display: inline-block;
@@ -352,81 +390,22 @@ export default {
         background-repeat: no-repeat;
     }
 
+    .ic__text {
+        position: absolute;
+        left: 2px;
+        top: 25px;
+    }
+
     .lead__actions {
         text-align: center;
     }
 
-    svg {
-        /*display: inline-block;*/
-        overflow:visible;
-    }
-
-    svg.svg__sphere {
-        max-width: $headerWidth;
-    }
-
-    svg.svg__lead {
-        width: $headerLeadWidth;
-    }
-
-    .sphere__header {
-        /*margin-top: 50px;*/
-        text-align: center;
-    }
-
-    .sphere__text {
-        font-family: 'Lobster', cursive;
-        font-size: 2em;
-        text-shadow: 3px 3px 3px #000;
-        max-width: $headerWidth;
-    }
-
-    .lead__text {
-        font-family: 'Ruslan Display', cursive;
-        text-shadow: 3px 3px 3px #000;
-        width: $headerLeadWidth;
-    }
-
-    #leadForm {
-        margin-top: -167px;
-    }
-
-    .attr__card {
-        background: url("https://3djungle.ru/upload/resize_cache/iblock/965/400_400_1/965b3a72dec6ff53f629f078331d0d0d.jpg");       //пробка
-        /*background: url("https://3djungle.ru/upload/resize_cache/iblock/d78/400_400_1/d78d39765489c09222e55e9609042dc1.jpg");       //пробка вертикальная*/
-        /*background: url("https://3djungle.ru/upload/resize_cache/iblock/d91/400_400_1/d911736008ed42cb9de330f0e294d7f4.jpg");       //пробка разное зерно*/
-        /*background: url("https://3djungle.ru/upload/resize_cache/iblock/b81/400_400_1/b81aa5f4e5fecc44b0a73c9504dbd83b.jpg");       //пробка круглая большая*/
-        /*background: url("https://3djungle.ru/upload/resize_cache/iblock/489/400_400_1/4890319d8159d1f2278b1a6682f1ea1a.jpg");       //газета*/
-        /*background: url("https://3djungle.ru/upload/resize_cache/iblock/b45/400_400_1/b45c663e0cd523281265ed64df1e13f0.jpg");       //линейка высокая*/
-        /*background: url("https://3djungle.ru/upload/resize_cache/iblock/172/400_400_1/17214d7e078f80e7fd3c60fde06a88a7.jpg");       //линейка застареная*/
-        /*background: url("https://3djungle.ru/upload/resize_cache/iblock/92a/400_400_1/92ad5e78680a28cd7e0e5d4e4d1e84ad.jpg");       //линейка с полями*/
-        /*background: url("https://3djungle.ru/upload/resize_cache/iblock/541/400_400_1/541a1e1b42dc8c23dd55637db0568916.jpg");       //упаковка*/
-        /*background: url("https://3djungle.ru/upload/resize_cache/iblock/63a/400_400_1/63abfdbd62c87d163e497ed4246a7dba.jpg");*/   //рукопись
-        //background: url("https://3djungle.ru/upload/resize_cache/iblock/061/400_400_1/0612cd0a13db4d00ca47e22366ffe8bd.jpg");     //белая пробка
-        /*background: url("https://3djungle.ru/upload/resize_cache/iblock/79e/400_400_1/79efd92a8a85deaec877b87737686b3d.jpg");*/   //клетка
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        border-radius: 5px;
-        text-shadow: 0 0 2px #000;
-        -webkit-box-shadow: 0 0 5px #000;
-        -moz-box-shadow: 0 0 5px #000;
-        box-shadow: 0 0 5px #000;
-        position: relative;
-    }
-
-    .attr__card__pin {
-        content: "";
-        display: inline-block;
-        position: absolute;
-        right: $pinOffset;
-        top: $pinOffset;
-        width: $pinWidth;
-        height: $pinWidth;
-        background-size: contain;
-    }
-
     input[type~="text"], input[type~="tel"], input[type~="email"], textarea {
         font-size: 20px;
-        font-weight: bold;
+        /*font-weight: bold;*/
+    }
+
+    input:-webkit-autofill {
+        -webkit-box-shadow: inset 0 0 0 16px #DEEECC !important; /* Цвет фона */
     }
 </style>

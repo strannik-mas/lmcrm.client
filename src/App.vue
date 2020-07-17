@@ -96,6 +96,24 @@
                 </v-btn>
             </v-toolbar-items>
 
+            <v-toolbar-items class="hidden-md-and-up">
+                <v-btn
+                        text
+                        v-for="link in links"
+                        :key="link.title"
+                        :to="link.url"
+                >
+                    <v-icon center>{{link.icon}}</v-icon>
+                </v-btn>
+                <v-btn
+                        text
+                        @click="onLogout"
+                        v-if="isUserLoggedIn"
+                >
+                    <v-icon center>mdi-exit-to-app</v-icon>
+                </v-btn>
+            </v-toolbar-items>
+
             <v-app-bar-nav-icon
                     @click="drawer = !drawer"
                     class="hidden-md-and-up"

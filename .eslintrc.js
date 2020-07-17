@@ -24,6 +24,7 @@ module.exports = {
         'quotes': ["error", "single", { "allowTemplateLiterals": true, "avoidEscape": true }],
         'object-curly-spacing': ["error", "never"],
         'no-plusplus': 0,
+        'no-prototype-builtins': 0,
         'import/prefer-default-export': 'off',
         'spaced-comment': ["error", "never"],
         'space-unary-ops': [

@@ -13,9 +13,12 @@ export const getters: GetterTree<ProfileState, RootState> = {
         return state.user;
     },
     isUserLoggedIn(state) {
-        const token = localStorage.getItem('token');
+        const ttl: number|null = Number(localStorage.getItem('expires_token'));
+        const token: string|null = localStorage.getItem('token');
         console.log(state.user);
         console.log(token);
+        console.log(ttl);
+        console.log(new Date(ttl));
         return (token !== null && typeof state.user !== 'undefined');
     },
 };

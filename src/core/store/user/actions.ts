@@ -16,6 +16,7 @@ export const actions: ActionTree<ProfileState, RootState> = {
                 console.log(data);
                 if (data.status === 'success') {
                     localStorage.setItem('token', data.token);
+                    localStorage.setItem('expires_token', data.expires_in);
                     user.state = 0;
                     commit('profileLoaded', user);
                 }
@@ -68,6 +69,7 @@ export const actions: ActionTree<ProfileState, RootState> = {
                 console.log(data);
                 if (data.status === 'success') {
                     localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('expires_token', data.expires_in);
                     user.firstName = data.first_name;
                     user.lastName = data.last_name;
                     user.phone = data.phone;
@@ -90,6 +92,7 @@ export const actions: ActionTree<ProfileState, RootState> = {
     },
     logoutUser({commit}) {
         localStorage.removeItem('token');
+        localStorage.removeItem('expires_token');
         commit('profileLoaded', undefined);
     },
 };
