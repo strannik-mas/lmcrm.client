@@ -15,20 +15,29 @@
             <input type="hidden" name="sphere_id" :value="sphereById.sphere.id">
             <input type="hidden" name="source" value="client">
             <div
-                    class="form-group pr-3 pl-3 pb-2"
+                    class="form-group pr-3 pl-3 pb-6"
                     v-for="(attribute, index) in attributes"
                     :key="index"
             >
                     <v-card
-                        class="mx-auto pa-2"
+                        class="mx-auto pl-2 pr-2"
                         :id="attribute.name"
+                        :height="(attribute.type === 'text' || attribute.type === 'tel'  ||
+                            attribute.type === 'email' || attribute.type === 'date') ? '50px' : 'auto'"
                         :color="(validationErrors &&
                                  (typeof validationErrors[attribute.name] !== 'undefined' ||
                                   typeof validationErrors['fields.' + attribute.name] !== 'undefined')) ?
-                                   '#FFC9C990' : '#cccccc75'"
+                                   '#FFC9C9' : ''"
+                        :style="{
+                            border: '1px solid #c3c3c3',
+                            color: '#585858',
+                            minHeight: '50px',
+                            maxWidth: '600px',
+                            borderRadius: '25px',
+                        }"
                     >
                         <v-layout v-if="attribute.type !== 'text'
-                            && attribute.type !== 'tel'  && attribute.type !== 'email'">
+                            && attribute.type !== 'tel'  && attribute.type !== 'email' && attribute.type !== 'date'">
                             <i
                                     class="ic ma-3"
                                     :style="{
@@ -42,7 +51,7 @@
                             </v-flex>
                         </v-layout>
 
-                    <v-flex xs12
+                    <v-flex xs12 class="ma-0 pa-0"
                             v-if="attribute.type === 'text' || attribute.type === 'tel'  || attribute.type === 'email'"
                     >
                         <i
@@ -55,13 +64,13 @@
                             :type="attribute.type"
                             :name="attribute.name"
                             :value="getValue(attribute.name)"
-                            :label="attribute.label"
-                            :required="attribute.name === 'name' || attribute.name === 'phone'"
+                            :placeholder="attribute.label"
+                            :hide-details="true"
                             @input="setColor(attribute.name, attribute.type)"
                             font-size="1em"
-                            class="ml-7"
+                            class="ml-10 mt-0 pt-2 custom-placeholer-color"
                         />
-                        <div class="error--text" v-if="validationErrors &&
+                        <div class="error--text mt-2" v-if="validationErrors &&
                                  typeof validationErrors[attribute.name] !== 'undefined'">
                             <p
                                     v-for="(error, index) in validationErrors[attribute.name]"
@@ -71,6 +80,12 @@
                     </v-flex>
 
                     <v-flex xs12 v-if="attribute.type === 'date'">
+                        <i
+                                class="ic__text"
+                                :style="{
+                            backgroundImage: 'url(' + attribute.icon + ')'
+                        }"
+                        />
                         <v-menu
                                 ref="menu1"
                                 v-model="menu1"
@@ -82,11 +97,11 @@
                         >
                             <template v-slot:activator="{ on, attrs }">
                                 <v-text-field
-                                        v-model="dateFormatted"
-                                        label="Date"
+                                        v-model="computedDateFormatted"
                                         :name="'fields[' + attribute.name + ']'"
-                                        prepend-icon="event"
                                         v-bind="attrs"
+                                        class="ml-10 mt-0 pt-2 custom-placeholer-color"
+                                        :placeholder="attribute.label"
                                         @blur="date = parseDate(dateFormatted)"
                                         @input="setColor(attribute.name, attribute.type)"
                                         v-on="on"
@@ -230,6 +245,9 @@ export default {
             }
             return null;
         },
+        computedDateFormatted() {
+            return this.formatDate(this.date);
+        },
     },
     watch: {
         date(val) {
@@ -309,7 +327,7 @@ export default {
         parseDate(date) {
             if (! date) return null;
 
-            const [month, day, year] = date.split('/');
+            const [day, month, year] = date.split('/');
             return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         },
         setColor(name, type) {
@@ -321,7 +339,7 @@ export default {
                 val = collections[0].value;
             } else if (type === 'date') {
                 collections = document.getElementsByName(`fields[${name}]`);
-                val = this.dateFormatted;
+                val = this.computedDateFormatted;
             } else if (type === 'radio' || type === 'checkbox') {
                 field = `fields.${name}`;
                 collections = document.getElementById(name).getElementsByTagName('input');
@@ -335,9 +353,11 @@ export default {
             }
 
             if (typeof collections[0] !== 'undefined') {
+                //console.log(val);
                 if (val !== '') {
                     //document.getElementById(name).style.background = 'none';
-                    document.getElementById(name).style.backgroundColor = '#c5e1a590';
+                    //console.log(document.getElementById(name));
+                    document.getElementById(name).style.backgroundColor = '#B6FFB6';
 
                     this.deleteError(field);
                     const errorDiv = document.getElementById(name).getElementsByClassName('error--text')[0];
@@ -345,7 +365,7 @@ export default {
                         errorDiv.style.display = 'none';
                     }
                 } else {
-                    document.getElementById(name).style.backgroundColor = '#cccccc85';
+                    document.getElementById(name).style.backgroundColor = '#fff';
                 }
             }
         },
@@ -382,8 +402,8 @@ export default {
 
 <style lang="scss">
     i.ic, .ic__text {
-        height: 30px;
-        width: 30px;
+        height: 25px;
+        width: 25px;
         display: inline-block;
         background-size: contain;
         background-position: 50%;
@@ -392,8 +412,8 @@ export default {
 
     .ic__text {
         position: absolute;
-        left: 2px;
-        top: 25px;
+        left: 10px;
+        top: 10px;
     }
 
     .lead__actions {
@@ -401,11 +421,24 @@ export default {
     }
 
     input[type~="text"], input[type~="tel"], input[type~="email"], textarea {
-        font-size: 20px;
-        /*font-weight: bold;*/
+        /*font-size: 20px;
+        font-weight: bold;*/
     }
 
-    input:-webkit-autofill {
-        -webkit-box-shadow: inset 0 0 0 16px #DEEECC !important; /* Цвет фона */
+    .custom-placeholer-color input::placeholder {
+        color: black!important;
+        opacity: 1;
+    }
+
+    .v-input__slot:after, .v-input__slot:before {
+        width: 0 !important;
+    }
+
+    .SphereLeadForm {
+        background-color: #f7f7f7;
+    }
+
+    .SphereLeadForm input:-webkit-autofill {
+        -webkit-box-shadow: inset 0 0 0 16px #B6FFB6 !important; /* Цвет фона */
     }
 </style>

@@ -48,7 +48,7 @@
         </v-list>
         </v-navigation-drawer>
 
-        <v-app-bar app dark color="primary" :style="{boxShadow: 'none'}">
+        <v-app-bar app dark color="rgb(9, 33, 96)" :style="{boxShadow: 'none'}">
             <a
                     class="header__logo"
                     href="/"
@@ -122,7 +122,7 @@
         <v-tabs
                 v-if="isUserLoggedIn && state === 1"
                 fixed-tabs
-                background-color="indigo"
+                background-color="rgb(9, 33, 96)"
                 dark
                 :style="{marginTop: '56px'}"
         >
