@@ -51,7 +51,7 @@
         <v-app-bar app dark color="rgb(9, 33, 96)" :style="{boxShadow: 'none'}">
             <a
                     class="header__logo"
-                    href="/"
+                    @click="redirectToRoute('/')"
                     :style="{
                 background: 'url(' + logoUrl + ') no-repeat 50%',
                 backgroundSize: 'contain' + ' '
@@ -120,7 +120,7 @@
             />
         </v-app-bar>
         <v-tabs
-                v-if="isUserLoggedIn && state === 1"
+                v-if="isUserLoggedIn && state === 2"
                 fixed-tabs
                 background-color="rgb(9, 33, 96)"
                 dark
@@ -146,10 +146,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import appMixin from '@/core/mixins/ApplicationMain';
+import Common from '@/core/mixins/Common';
+import AppMixin from '@/core/mixins/ApplicationMain';
 
 export default Vue.extend({
-    mixins: [appMixin],
+    mixins: [AppMixin, Common],
 });
 </script>
 

@@ -25,6 +25,7 @@ module.exports = {
         'object-curly-spacing': ["error", "never"],
         'no-plusplus': 0,
         'no-prototype-builtins': 0,
+        'prefer-template': 0,
         'import/prefer-default-export': 'off',
         'spaced-comment': ["error", "never"],
         'space-unary-ops': [
@@ -36,6 +37,9 @@ module.exports = {
                 }
             }],
         'object-curly-newline': ["error", { "ImportDeclaration": "never", "ExportDeclaration": "never" }],
+        'one-var-declaration-per-line': ["error", "initializations"],
+        'one-var': ["error", { "initialized": "never" }],
+        'arrow-parens': 0,
 
         "@typescript-eslint/no-explicit-any": "off"
     },
