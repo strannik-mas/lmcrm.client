@@ -6,7 +6,7 @@
         temporary
         v-model="drawer"
         >
-        <v-list-item v-if="isUserLoggedIn">
+        <v-list-item v-if="isUserLoggedIn()">
             <v-list-item-content>
                 <v-list-item-title class="v-avatar--left">
                     <v-icon light large>mdi-account-circle</v-icon>
@@ -44,7 +44,7 @@
             </v-list-item>
             <v-list-item
                     @click="onLogout"
-                    v-if="isUserLoggedIn"
+                    v-if="isUserLoggedIn()"
             >
                 <v-list-item-icon>
                     <v-icon>mdi-exit-to-app</v-icon>
@@ -68,7 +68,7 @@
             />
             <v-spacer/>
             <v-row
-                    v-if="isUserLoggedIn"
+                    v-if="isUserLoggedIn()"
                     :class="'hidden-xs-only ' + (checkRightPosition ? 'text-right mr-2' : 'text-left ml-2')"
             >
                 <v-col>
@@ -78,7 +78,7 @@
             </v-row>
             <v-badge
                     :class="checkRightPosition ? 'mr-2' : 'ml-2'"
-                    v-if="isUserLoggedIn"
+                    v-if="isUserLoggedIn()"
                     :content="messages"
                     :value="messages"
                     color="green"
@@ -106,7 +106,7 @@
                 <v-btn
                         text
                         @click="onLogout"
-                        v-if="isUserLoggedIn"
+                        v-if="isUserLoggedIn()"
                 >
                     <v-icon left>mdi-exit-to-app</v-icon>
                     {{$t('main_menu.logout')}}
@@ -115,7 +115,7 @@
                 <v-btn
                         text
                         @click="needRegister = ! needRegister"
-                        v-else-if="! isUserLoggedIn && noToken"
+                        v-else-if="(! isUserLoggedIn() && noToken) || showLogin"
                 >
                     <v-icon center>mdi-login</v-icon>
                     {{$t('main_menu.login')}}
@@ -134,14 +134,14 @@
                 <v-btn
                         text
                         @click="onLogout"
-                        v-if="isUserLoggedIn"
+                        v-if="isUserLoggedIn()"
                 >
                     <v-icon center>mdi-exit-to-app</v-icon>
                 </v-btn>
                 <v-btn
                         text
                         @click="needRegister = true"
-                        v-else-if="! isUserLoggedIn && noToken"
+                        v-else-if="(! isUserLoggedIn() && noToken) || showLogin"
                 >
                     <v-icon center>mdi-login</v-icon>
                 </v-btn>
@@ -153,7 +153,7 @@
             />
         </v-app-bar>
         <v-tabs
-                v-if="isUserLoggedIn"
+                v-if="isUserLoggedIn()"
                 fixed-tabs
                 background-color="rgb(9, 33, 96)"
                 dark
@@ -172,8 +172,8 @@
             </v-tab>
         </v-tabs>
         <app-phone-registration
-                v-if="! this.isUserLoggedIn && needRegister"
-                @dialogClose="needRegister = $event"
+                v-if="! this.isUserLoggedIn() && needRegister"
+                @dialogClose="needRegister = $event, showLogin = false"
         />
         <!-- Sizes your content based upon application components -->
         <v-main>
@@ -205,10 +205,11 @@ export default Vue.extend({
          */
         switcherUpdatedCounter: 0,
         needRegister: false,
+        showLogin: false,
     }),
     computed: {
         links() {
-            /*if (this.isUserLoggedIn) {
+            /*if (this.isUserLoggedIn()) {
                 return null;
             }
             return [
@@ -238,6 +239,7 @@ export default Vue.extend({
         onLogout() {
             this.$store.dispatch('user/logoutUser');
             this.needRegister = false;
+            this.showLogin = true;
             if (this.$router.currentRoute.path !== '/') {
                 this.$router.push('/');
             }
