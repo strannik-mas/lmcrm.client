@@ -50,8 +50,17 @@ const instance = axios.create(config);
 instance.interceptors.request.use((config: AxiosRequestConfig) => {
     // console.log(config.method);
     if (config.method === 'get') {
+        const token: string|null = localStorage.getItem('token');
+        let params: object = config.params !== undefined ? config.params : {};
+        if (token === null) {
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            params = Object.assign(params, {api_key: process.env.VUE_APP_API_KEY, locale: i18n.locale});
+        } else {
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            params = Object.assign(params, {api_key: process.env.VUE_APP_API_KEY, locale: i18n.locale, token});
+        }
         // eslint-disable-next-line @typescript-eslint/camelcase,no-param-reassign
-        config.params = {api_key: process.env.VUE_APP_API_KEY, locale: i18n.locale};
+        config.params = params;
     }
     return config;
 });

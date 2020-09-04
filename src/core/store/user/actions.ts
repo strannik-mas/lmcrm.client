@@ -112,7 +112,7 @@ export const actions: ActionTree<ProfileState, RootState> = {
                 console.log(error.response.data.errors);
                 commit('setError', error.response.data.errors, {root: true});
                 commit('profileError');
-                //localStorage.removeItem('token');
+                localStorage.removeItem('token');
             });
         } catch (error) {
             commit('setError', error, {root: true});

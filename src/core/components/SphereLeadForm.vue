@@ -229,10 +229,6 @@ export default {
     computed: {
         sphereById() {
             const sphere = this.$store.getters['sphere/sphereById'](+this.id);
-            console.log(sphere.attributes);
-            if (sphere.attributes === undefined) {
-                this.$store.dispatch('sphere/getSphereAttributes');
-            }
             return sphere;
         },
         attributes() {

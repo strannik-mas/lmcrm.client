@@ -7,6 +7,7 @@ import Registration from '@/core/components/Auth/Registration.vue';
 import SphereLeadForm from '@/core/components/SphereLeadForm.vue';
 import LoadStartData from './start_data';
 import AuthGuard from './auth_guard';
+import CheckSphereAttributes from './check_sphere_attributes';
 
 export const routes: Array<RouteConfig> = [
     {
@@ -42,6 +43,6 @@ export const routes: Array<RouteConfig> = [
         props: true,
         name: 'lead',
         component: SphereLeadForm,
-        beforeEnter: AuthGuard,
+        beforeEnter: CheckSphereAttributes,
     },
 ];
