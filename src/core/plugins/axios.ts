@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosRequestConfig} from 'axios';
 import i18n from '@/core/plugins/i18n';
 
 const defaultTransformers = (): any => {
@@ -44,4 +44,16 @@ export const config: any = {
     ],
 };
 
-export default axios.create(config);
+const instance = axios.create(config);
+
+//eslint-disable-next-line no-shadow
+instance.interceptors.request.use((config: AxiosRequestConfig) => {
+    // console.log(config.method);
+    if (config.method === 'get') {
+        // eslint-disable-next-line @typescript-eslint/camelcase,no-param-reassign
+        config.params = {api_key: process.env.VUE_APP_API_KEY, locale: i18n.locale};
+    }
+    return config;
+});
+
+export default instance;

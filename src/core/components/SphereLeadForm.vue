@@ -219,8 +219,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-import * as easings from 'vuetify/es5/services/goto/easing-patterns';
+import axios from '@/core/plugins/axios';
 import Common from '@/core/mixins/Common';
 import i18n from '@/core/plugins/i18n';
 
@@ -229,7 +228,12 @@ export default {
     props: ['id'],
     computed: {
         sphereById() {
-            return this.$store.getters['sphere/sphereById'](+this.id);
+            const sphere = this.$store.getters['sphere/sphereById'](+this.id);
+            console.log(sphere.attributes);
+            if (sphere.attributes === undefined) {
+                this.$store.dispatch('sphere/getSphereAttributes');
+            }
+            return sphere;
         },
         attributes() {
             const sphere = this.sphereById;
@@ -269,7 +273,7 @@ export default {
         },
     },
     watch: {
-        date(val) {
+        date() {
             this.dateFormatted = this.formatDate(this.date);
         },
     },
@@ -303,8 +307,8 @@ export default {
         submit() {
             const formElement = document.getElementById('leadForm');
             const data = new FormData(formElement);
-            data.append('api_key', process.env.VUE_APP_API_KEY);
-            data.append('locale', i18n.locale);
+            /*data.append('api_key', process.env.VUE_APP_API_KEY);
+            data.append('locale', i18n.locale);*/
             try {
                 axios({
                     method: 'post',
