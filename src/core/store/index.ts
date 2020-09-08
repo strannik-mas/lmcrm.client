@@ -3,6 +3,7 @@ import Vuex, {StoreOptions} from 'vuex';
 import {RootState, ValidationErrors} from './types';
 import {user} from './user';
 import {sphere} from './sphere';
+import {lead} from './lead';
 
 Vue.use(Vuex);
 
@@ -13,6 +14,7 @@ const store: StoreOptions<RootState> = {
     },
     mutations: {
         setLoading(state: RootState, payload: boolean) {
+            console.log(payload);
             state.loading = payload;
         },
         setError(state: RootState, payload: ValidationErrors) {
@@ -60,7 +62,7 @@ const store: StoreOptions<RootState> = {
         },
     },
     modules: {
-        user, sphere,
+        user, sphere, lead,
     },
 };
 

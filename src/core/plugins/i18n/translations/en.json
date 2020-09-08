@@ -5,11 +5,12 @@
     "main_menu": {
         "logout": "Logout",
         "login": "Login",
+        "history": "history",
         "languages": "Languages"
     },
     "tabs": {
         "main": "main",
-        "history": "history",
+        "requests": "requests",
         "scheduler": "scheduler"
     },
     "registration": {

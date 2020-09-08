@@ -3,6 +3,7 @@ import AuthGuard from './auth_guard';
 
 export default function (to: any, from: any, next: any) {
     const sphere = store.getters['sphere/sphereById'](+to.params.id);
+    console.log(sphere.attributes);
     //если у сферы нет параметров - догружаем их с сервера
     if (sphere.attributes === undefined) {
         store.dispatch('sphere/setSphereAttributes', {id: +to.params.id}).then(() => {
@@ -13,5 +14,7 @@ export default function (to: any, from: any, next: any) {
             }
         })
             .catch((err) => console.log(err));
+    } else {
+        AuthGuard(to, from, next);
     }
 }

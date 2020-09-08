@@ -1,7 +1,6 @@
 import {ActionTree} from 'vuex';
 import {AxiosResponse} from 'axios';
 import axios from '@/core/plugins/axios';
-import i18n from '@/core/plugins/i18n';
 import {Sphere, SphereState} from './types';
 import {RootState} from '../types';
 
@@ -58,7 +57,6 @@ export const actions: ActionTree<SphereState, RootState> = {
         } catch (error) {
             console.log(error);
             commit('setError', error, {root: true});
-            throw error;
         } finally {
             commit('setLoading', false, {root: true});
         }

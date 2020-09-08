@@ -1,5 +1,5 @@
 <template>
-    <div class="SphereLeadForm pt-2" v-if="typeof sphereById !== 'undefined'">
+    <div class="SphereLeadForm pt-2" v-if="typeof sphereById !== 'undefined' && ! loading">
         <h1 class="text--primary text-center">{{$t("create_lead.header")}}</h1>
         <h2 class="text--secondary text-center">{{$t("create_lead.sphere")}}: {{sphereById.sphere.name}}</h2>
         <v-alert
@@ -216,14 +216,17 @@
             </div>
         </v-form>
     </div>
+    <CircularSpinner v-else-if="loading"/>
 </template>
 
 <script>
 import axios from '@/core/plugins/axios';
 import Common from '@/core/mixins/Common';
 import i18n from '@/core/plugins/i18n';
+import CircularSpinner from '@/core/components/CircularSpinner.vue';
 
 export default {
+    components: {CircularSpinner},
     mixins: [Common],
     props: ['id'],
     computed: {

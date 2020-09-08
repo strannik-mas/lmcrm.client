@@ -5,11 +5,12 @@
     "main_menu": {
         "logout": "יציאה",
         "login": "כניסה כמשתמש קיים",
+        "history": "היסטוריה",
         "languages": "שפות"
     },
     "tabs": {
         "main": "ראשי",
-        "history": "היסטוריה",
+        "requests": "requests",
         "scheduler": "יומן פגישות"
     },
     "registration": {

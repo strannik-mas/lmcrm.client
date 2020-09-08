@@ -225,7 +225,7 @@ export default Vue.extend({
         tabs() {
             return [
                 {title: i18n.t('tabs.main'), url: '/'},
-                {title: i18n.t('tabs.history'), url: '/history'},
+                {title: i18n.t('tabs.requests'), url: '/requests'},
                 {title: i18n.t('tabs.scheduler'), url: '/scheduler'},
             ];
         },
