@@ -14,7 +14,6 @@ const store: StoreOptions<RootState> = {
     },
     mutations: {
         setLoading(state: RootState, payload: boolean) {
-            console.log(payload);
             state.loading = payload;
         },
         setError(state: RootState, payload: ValidationErrors) {

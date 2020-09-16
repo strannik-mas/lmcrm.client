@@ -58,7 +58,7 @@
 <script>
 import Common from '@/core/mixins/Common';
 import PhoneRegistration from '@/core/components/Auth/PhoneRegistration.vue';
-import CircularSpinner from '@/core/components/CircularSpinner.vue';
+import CircularSpinner from '@/core/components/Utils/CircularSpinner.vue';
 
 export default {
     components: {PhoneRegistration, CircularSpinner},

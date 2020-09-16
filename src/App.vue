@@ -159,7 +159,7 @@
                 fixed-tabs
                 background-color="rgb(9, 33, 96)"
                 dark
-                :style="{marginTop: '56px'}"
+                :style="{marginTop: '56px', maxHeight: '48px'}"
         >
             <v-tab
                     v-for="(tab, index) in tabs"
@@ -178,7 +178,7 @@
                 @dialogClose="needRegister = $event, showLogin = false"
         />
         <!-- Sizes your content based upon application components -->
-        <v-main>
+        <v-main class="pa-0">
             <!-- If using vue-router -->
             <router-view/>
         </v-main>
@@ -188,7 +188,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import PhoneRegistration from '@/core/components/Auth/PhoneRegistration.vue';
-import LanguageSwitcher from '@/core/components/LanguageSwitcher.vue';
+import LanguageSwitcher from '@/core/components/Utils/LanguageSwitcher.vue';
 import Common from '@/core/mixins/Common';
 import i18n from '@/core/plugins/i18n';
 

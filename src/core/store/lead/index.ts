@@ -7,6 +7,8 @@ import {RootState} from '../types';
 
 export const state: LeadsState = {
     error: false,
+    requests_leads: undefined,
+    hisory_leads: undefined,
 };
 
 const namespaced = true;

@@ -42,5 +42,14 @@
         "send_lead_btn": "שלח/י",
         "success_msg": "הפניה נוצרה בהצלחה",
         "error_msg": "הפניה לא נוצרה. נא לתקן טעויות בהזנת פרטים"
+    },
+    "upload_files_modal": {
+        "title": "Upload files dialog",
+        "label": "File input",
+        "description": "Select files to upload",
+        "counter_files": "File(s)",
+        "btn_upl": "Upload",
+        "btn_show_dialog": "Upload documents",
+        "btn_cancel": "Cancel"
     }
 }

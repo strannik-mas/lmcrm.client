@@ -21,7 +21,6 @@ export default Vue.extend({
     },
     computed: {
         loading() {
-            console.log(this.$store.getters.loading);
             return this.$store.getters.loading;
         },
     },

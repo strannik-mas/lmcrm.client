@@ -209,6 +209,8 @@
                 <v-btn
                         color="success"
                         class="ma-10"
+                        :loading="loading2"
+                        :disabled="loading2"
                         @click="submit"
                 >
                     {{$t("create_lead.send_lead_btn")}}
@@ -220,15 +222,14 @@
 </template>
 
 <script>
-import axios from '@/core/plugins/axios';
 import Common from '@/core/mixins/Common';
 import i18n from '@/core/plugins/i18n';
-import CircularSpinner from '@/core/components/CircularSpinner.vue';
+import CircularSpinner from '@/core/components/Utils/CircularSpinner.vue';
 
 export default {
     components: {CircularSpinner},
     mixins: [Common],
-    props: ['id'],
+    props: ['id', 'leadId'],
     computed: {
         sphereById() {
             const sphere = this.$store.getters['sphere/sphereById'](+this.id);
@@ -286,6 +287,7 @@ export default {
             alert: false,
             alertType: null,
             alertText: '',
+            loading2: false,
         };
     },
     methods: {
@@ -304,57 +306,44 @@ export default {
             });
         },
         submit() {
+            this.loading2 = true;
             const formElement = document.getElementById('leadForm');
             const data = new FormData(formElement);
-            /*data.append('api_key', process.env.VUE_APP_API_KEY);
-            data.append('locale', i18n.locale);*/
-            try {
-                axios({
-                    method: 'post',
-                    url: `${process.env.VUE_APP_API_OLD_URL}sphere/form/data/save`,
-                    data,
-                    config: {headers: {'Content-Type': 'multipart/form-data'}},
-                }).then(response => {
-                    //handle success
-                    const dataResp = response && response.data;
-                    console.log(dataResp);
-                    this.$vuetify.goTo('#alertMessage', {
-                        duration: 300,
-                        offset: 0,
-                        easing: 'easeInOutCubic',
-                    });
-                    if (dataResp.status === 'success') {
-                        this.$store.dispatch('setError', null, {root: true});
-                        this.alert = true;
-                        this.alertText = i18n.t('create_lead.success_msg');
-                        this.alertType = 'success';
+            data.append('locale', i18n.locale);
 
-                        let route = '/';
-                        if (this.isUserLoggedIn()) {
-                            route = '/history';
-                        }
-                        setTimeout(() => { this.$router.push(route); }, 2000);
-                    } else if (dataResp.status === 'error') {
-                        this.alert = true;
-                        this.alertText = dataResp.error.message;
-                        this.alertType = 'error';
+            this.$store.dispatch('lead/saveLead', data).then((dataResp) => {
+                //console.log(dataResp);
+
+                this.$vuetify.goTo('#alertMessage', {
+                    duration: 300,
+                    offset: 0,
+                    easing: 'easeInOutCubic',
+                });
+                if (dataResp.status === 'success') {
+                    this.$store.dispatch('setError', null, {root: true});
+                    this.alert = true;
+                    this.alertText = i18n.t('create_lead.success_msg');
+                    this.alertType = 'success';
+
+                    let route = '/';
+                    if (this.isUserLoggedIn()) {
+                        route = '/requests';
                     }
-                    if (typeof dataResp.error !== 'undefined' && dataResp.status !== 'error') {
-                        console.log(dataResp.error);
-                        this.$store.dispatch('setError', dataResp.error, {root: true});
-                        this.alert = true;
-                        this.alertText = i18n.t('create_lead.error_msg');
-                        this.alertType = 'warning';
-                    }
-                })
-                    .catch((response) => {
-                        this.$store.dispatch('setError', response.errors, {root: true});
-                        console.log(response.errors);
-                    });
-            } catch (error) {
-                console.log(error);
-                this.$store.dispatch('setError', error, {root: true});
-            }
+                    setTimeout(() => { this.$router.push(route); }, 2000);
+                } else if (dataResp.status === 'error') {
+                    this.alert = true;
+                    this.alertText = dataResp.error.message;
+                    this.alertType = 'error';
+                }
+                if (typeof dataResp.error !== 'undefined' && dataResp.status !== 'error') {
+                    //console.log(dataResp.error);
+                    this.$store.dispatch('setError', dataResp.error, {root: true});
+                    this.alert = true;
+                    this.alertText = i18n.t('create_lead.error_msg');
+                    this.alertType = 'warning';
+                }
+                this.loading2 = false;
+            });
         },
         formatDate(date) {
             if (! date) return null;

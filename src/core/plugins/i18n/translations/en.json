@@ -42,5 +42,14 @@
         "send_lead_btn": "Send lead",
         "success_msg": "Lead created successfully!",
         "error_msg": "Lead can't create. Please, fix some errors on form"
+    },
+    "upload_files_modal": {
+        "title": "Upload files dialog",
+        "label": "File input",
+        "description": "Select files to upload",
+        "counter_files": "File(s)",
+        "btn_upl": "Upload",
+        "btn_show_dialog": "Upload documents",
+        "btn_cancel": "Cancel"
     }
 }

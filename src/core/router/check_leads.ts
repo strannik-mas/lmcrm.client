@@ -13,13 +13,15 @@ export default function (to: Route, from: Route, next: NavigationGuardNext) {
     }
     console.log(to.path);
     const leads: Array<Lead> = store.getters[getterStr];
-    //console.log(sphere.attributes);
+    console.log(getterStr);
+    console.log(leads);
     //если лидов нет - догружаем их с сервера
     if (leads === undefined) {
         const userId: number|null = store.getters['user/userId'];
         if (userId) {
             store.dispatch('lead/setLeads', {active: isActive, id: userId}).then(() => {
                 const newLeads = store.getters[getterStr];
+                console.log('newLeads: ', newLeads);
                 if (newLeads !== undefined) {
                     AuthGuard(to, from, next);
                 }
