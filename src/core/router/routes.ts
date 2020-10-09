@@ -1,5 +1,5 @@
 import {RouteConfig} from 'vue-router';
-import History from '@/components/History.vue';
+import History from '@/core/components/Lead/History.vue';
 import Scheduler from '@/components/Scheduler.vue';
 import Home from '@/components/Home.vue';
 // import Login from '@/core/components/Auth/Login.vue';
@@ -38,7 +38,7 @@ export const routes: Array<RouteConfig> = [
         path: '/history',
         name: 'history',
         component: History,
-        beforeEnter: AuthGuard,
+        beforeEnter: CheckLeads,
     },
     {
         path: '/scheduler',

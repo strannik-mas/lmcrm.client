@@ -20,21 +20,8 @@ export default Vue.extend({
     components: {LeadsList, CircularSpinner},
     computed: {
         leads(): Array<Lead>|undefined {
-            return this.$store.getters['lead/activeLeads'];
+            return this.$store.getters['lead/historyLeads'];
         },
     },
 });
 </script>
-
-<style scoped lang="scss">
-    /*.request__card {
-        margin: 0 8px 12px;
-        max-width: 600px;
-        display: flex;
-        justify-content: space-around;
-    }*/
-
-    .v-chip.lead__chip {
-        border-width: 2px;
-    }
-</style>

@@ -63,9 +63,9 @@
                     class="header__logo"
                     @click="redirectToRoute('/')"
                     :style="{
-                background: 'url(' + logoUrl + ') no-repeat 50%',
-                backgroundSize: 'contain' + ' '
-            }"
+                        background: 'url(' + logoUrl + ') no-repeat 50%',
+                        backgroundSize: 'contain' + ' '
+                    }"
             />
             <v-spacer/>
             <v-row
@@ -178,7 +178,7 @@
                 @dialogClose="needRegister = $event, showLogin = false"
         />
         <!-- Sizes your content based upon application components -->
-        <v-main class="pa-0">
+        <v-main class="pa-0" :style="{backgroundColor: '#f7f7f7'}">
             <!-- If using vue-router -->
             <router-view/>
         </v-main>
@@ -227,6 +227,7 @@ export default Vue.extend({
                 {title: i18n.t('tabs.main'), url: '/'},
                 {title: i18n.t('tabs.requests'), url: '/requests'},
                 {title: i18n.t('tabs.scheduler'), url: '/scheduler'},
+                {title: i18n.t('tabs.history'), url: '/history'},
             ];
         },
         noToken() {

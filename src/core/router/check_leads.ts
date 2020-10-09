@@ -6,23 +6,23 @@ import AuthGuard from './auth_guard';
 
 export default function (to: Route, from: Route, next: NavigationGuardNext) {
     let getterStr = 'lead/activeLeads';
-    let isActive = true;
+    let isActive = 1;
     if (to.path === '/history') {
         getterStr = 'lead/historyLeads';
-        isActive = false;
+        isActive = 0;
     }
     console.log(to.path);
     const leads: Array<Lead> = store.getters[getterStr];
-    console.log(getterStr);
+    //console.log(getterStr);
     console.log(leads);
     //если лидов нет - догружаем их с сервера
     if (leads === undefined) {
         const userId: number|null = store.getters['user/userId'];
         if (userId) {
-            store.dispatch('lead/setLeads', {active: isActive, id: userId}).then(() => {
-                const newLeads = store.getters[getterStr];
-                console.log('newLeads: ', newLeads);
-                if (newLeads !== undefined) {
+            //console.log(isActive);
+            store.dispatch('lead/setLeads', {active: isActive, id: userId}).then((resp) => {
+                console.log(resp);
+                if (resp.status === 'success') {
                     AuthGuard(to, from, next);
                 }
             })

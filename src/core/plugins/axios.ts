@@ -19,8 +19,14 @@ export const config: any = {
                 const token: string|null = localStorage.getItem('token');
 
                 if (token && typeof token !== 'undefined') {
-                    //eslint-disable-next-line no-param-reassign
-                    data.token = token;
+                    if (data instanceof FormData) {
+                        data.append('token', token);
+                        // eslint-disable-next-line no-param-reassign
+                        headers['Content-Type'] = 'multipart/form-data';
+                    } else {
+                        //eslint-disable-next-line no-param-reassign
+                        data.token = token;
+                    }
                     //eslint-disable-next-line no-param-reassign
                     headers.Authorization = 'Bearer ' + token;
                 }
@@ -34,8 +40,16 @@ export const config: any = {
                     currentLocale = process.env.VUE_APP_DEFAULT_LOCALE;
                 }
 
-                //eslint-disable-next-line no-param-reassign
-                data.locale = currentLocale;
+                if (data instanceof FormData) {
+                    data.append('locale', currentLocale);
+                    data.append('api_key', process.env.VUE_APP_API_KEY);
+                } else {
+                    //eslint-disable-next-line no-param-reassign
+                    data.locale = currentLocale;
+
+                    //eslint-disable-next-line no-param-reassign,@typescript-eslint/camelcase
+                    data.api_key = process.env.VUE_APP_API_KEY;
+                }
             }
 
             return data;

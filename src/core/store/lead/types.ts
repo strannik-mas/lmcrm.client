@@ -2,7 +2,8 @@ export interface LeadDetails {
     agents?: Array<any>;
     bids?: Array<any>;
     formData: Array<any>;
-    files?: Array<File>;
+    info: Array<any>;
+    files?: Array<any>;
 }
 
 export interface Lead {
@@ -11,6 +12,7 @@ export interface Lead {
     created_at: string;
     count_review: number;
     count_interest: number;
+    count_bids: number;
     details?: LeadDetails;
 }
 

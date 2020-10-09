@@ -7,7 +7,9 @@
                         dark
                         v-bind="attrs"
                         v-on="on"
+                        width="230px"
                 >
+                    <v-icon>mdi-text-box-plus-outline</v-icon>
                     {{$t('upload_files_modal.btn_show_dialog')}}
                 </v-btn>
             </template>
@@ -43,14 +45,32 @@
                                 {{ text }}
                             </v-chip>
 
-                            <span
-                                    v-else-if="index === 2"
-                                    class="overline grey--text text--darken-3 mx-2"
+                                <span
+                                        v-else-if="index === 2"
+                                        class="overline grey--text text--darken-3 mx-2"
+                                >
+            +{{ files.length - 2 }} {{$t('upload_files_modal.counter_files')}}
+          </span>
+                            </template>
+                        </v-file-input>
+
+                        <v-layout row wrap v-if="openedAgents.length > 0">
+                            <v-flex
+                                    xs12
+                                    v-for="agent in openedAgents"
+                                    :key="agent.id"
                             >
-        +{{ files.length - 2 }} {{$t('upload_files_modal.counter_files')}}
-      </span>
-                        </template>
-                    </v-file-input>
+                                <v-checkbox
+                                        :value="agent.id"
+                                        :label="agent.name"
+                                        v-model="agentsSelected"
+                                        :hide-details="true"
+                                        :style="{
+                                                margin: '0 12px'
+                                            }"
+                                />
+                            </v-flex>
+                        </v-layout>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer/>
@@ -59,7 +79,7 @@
                             color="primary"
                             :disabled="loading2"
                             @click="uploadFiles"
-                    >{{$t("registration.first_step.btn_send")}}</v-btn>
+                    >{{$t("upload_files_modal.btn_upl")}}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -68,23 +88,43 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import i18n from '@/core/plugins/i18n';
+import {eventEmitter} from '@/main';
 
 export default Vue.extend({
-    props: ['leadId'],
+    props: ['leadId', 'openedAgents'],
     data() {
         return {
             loading2: false,
             files: [],
             dialogActivator: false,
+            agentsSelected: [],
         };
     },
     methods: {
         uploadFiles() {
             this.loading2 = true;
+            const openLeads = [];
+            for (let i = 0; i < this.agentsSelected.length; i++) {
+                openLeads.push(this.openedAgents[i].open_lead_id);
+            }
             console.log(this.files);
-            this.$store.dispatch('lead/uploadLeadFiles', {id: +this.leadId, files: this.files})
+            this.$store.dispatch(
+                'lead/uploadLeadFiles',
+                {id: +this.leadId, files: this.files, agents: this.agentsSelected, openLeads},
+            )
                 .then((response) => {
                     console.log(response);
+                    if (response.status === 'success') {
+                        this.dialogActivator = false;
+                        this.files = [];
+                        this.agentsSelected = [];
+                        eventEmitter.$emit('documentsChanged', {
+                            alert: true,
+                            alertType: 'success',
+                            alertText: i18n.t('lead_details_page.alert_upload_success'),
+                        });
+                    }
                     this.loading2 = false;
                 })
                 .catch((err) => console.log(err));

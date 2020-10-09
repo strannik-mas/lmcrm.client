@@ -3,7 +3,7 @@ import {User} from '@/core/store/user/types';
 
 export default Vue.extend({
     methods: {
-        isUserLoggedIn() {
+        isUserLoggedIn(): boolean {
             //const token: string|null = localStorage.getItem('token');
             const user: User = this.$store.getters['user/userObj'];
             //console.log(user);
@@ -20,7 +20,7 @@ export default Vue.extend({
         },
     },
     computed: {
-        loading() {
+        loading(): boolean {
             return this.$store.getters.loading;
         },
     },
