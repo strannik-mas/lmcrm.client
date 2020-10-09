@@ -67,10 +67,28 @@
                         backgroundSize: 'contain' + ' '
                     }"
             />
+            <v-tabs
+                    v-if="isUserLoggedIn()"
+                    fixed-tabs
+                    background-color="rgb(9, 33, 96)"
+                    dark
+            >
+                <v-tab
+                        v-for="(tab, index) in tabs"
+                        :key="index"
+                        :to="tab.url"
+                        :style="{
+                        fontSize: '16px',
+                        lineHeight: '20px'
+                    }"
+                >
+                    {{tab.title}}
+                </v-tab>
+            </v-tabs>
             <v-spacer/>
             <v-row
                     v-if="isUserLoggedIn()"
-                    :class="'hidden-xs-only ' + (checkRightPosition ? 'text-right mr-2' : 'text-left ml-2')"
+                    :class="'hidden-sm-and-down ' + (checkRightPosition ? 'text-right mr-2' : 'text-left ml-2')"
             >
                 <v-col>
                     <v-icon dark large class="mr-1">mdi-account-circle</v-icon>
@@ -82,7 +100,7 @@
                     v-if="isUserLoggedIn()"
                     :content="messages"
                     :value="messages"
-                    color="green"
+                    color="red"
                     overlap
             >
                 <v-icon>mdi-email</v-icon>
@@ -154,31 +172,12 @@
                     class="hidden-md-and-up"
             />
         </v-app-bar>
-        <v-tabs
-                v-if="isUserLoggedIn()"
-                fixed-tabs
-                background-color="rgb(9, 33, 96)"
-                dark
-                :style="{marginTop: '56px', maxHeight: '48px'}"
-        >
-            <v-tab
-                    v-for="(tab, index) in tabs"
-                    :key="index"
-                    :to="tab.url"
-                    :style="{
-                        fontSize: '16px',
-                        lineHeight: '20px'
-                    }"
-            >
-                {{tab.title}}
-            </v-tab>
-        </v-tabs>
         <app-phone-registration
                 v-if="! this.isUserLoggedIn() && needRegister"
                 @dialogClose="needRegister = $event, showLogin = false"
         />
         <!-- Sizes your content based upon application components -->
-        <v-main class="pa-0" :style="{backgroundColor: '#f7f7f7'}">
+        <v-main :style="{backgroundColor: '#f7f7f7'}">
             <!-- If using vue-router -->
             <router-view/>
         </v-main>
@@ -224,7 +223,7 @@ export default Vue.extend({
         },
         tabs() {
             return [
-                {title: i18n.t('tabs.main'), url: '/'},
+                //{title: i18n.t('tabs.main'), url: '/'},
                 {title: i18n.t('tabs.requests'), url: '/requests'},
                 {title: i18n.t('tabs.scheduler'), url: '/scheduler'},
                 {title: i18n.t('tabs.history'), url: '/history'},
@@ -249,9 +248,9 @@ export default Vue.extend({
 
 <style scoped lang="scss">
     .header__logo {
-        width: 150px;
+        /*width: 150px;*/
         height: 40px;
-        min-width: 84px;
+        min-width: 150px;
         display: inline-block;
         font-size: 0;
         line-height: 0;

@@ -186,7 +186,8 @@ export default {
                 };
 
                 this.$store.dispatch('user/activateUserPhone', payload)
-                    .then(() => {
+                    .then((response) => {
+                        console.log(response);
                         console.log(this.step);
                         this.loading2 = false;
                         if (this.step !== 2) {
