@@ -1,6 +1,8 @@
 {
     "main_page": {
-        "open_btn": "Open"
+        "open_btn": "Open",
+        "contact_fab": "Contact",
+        "select_sphere_modal_title": "Select sphere"
     },
     "main_menu": {
         "logout": "Logout",

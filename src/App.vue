@@ -70,6 +70,7 @@
             <v-tabs
                     v-if="isUserLoggedIn()"
                     fixed-tabs
+                    class="hidden-sm-and-down"
                     background-color="rgb(9, 33, 96)"
                     dark
             >
@@ -86,7 +87,7 @@
                 </v-tab>
             </v-tabs>
             <v-spacer/>
-            <v-row
+            <!--<v-row
                     v-if="isUserLoggedIn()"
                     :class="'hidden-sm-and-down ' + (checkRightPosition ? 'text-right mr-2' : 'text-left ml-2')"
             >
@@ -94,7 +95,7 @@
                     <v-icon dark large class="mr-1">mdi-account-circle</v-icon>
                     <span v-html="fullName" class="subtitle-2"/>
                 </v-col>
-            </v-row>
+            </v-row>-->
             <v-badge
                     :class="checkRightPosition ? 'mr-2' : 'ml-2'"
                     v-if="isUserLoggedIn()"
@@ -169,13 +170,38 @@
 
             <v-app-bar-nav-icon
                     @click="drawer = !drawer"
-                    class="hidden-md-and-up"
             />
         </v-app-bar>
+        <v-tabs
+                v-if="isUserLoggedIn()"
+                fixed-tabs
+                background-color="rgb(9, 33, 96)"
+                dark
+                class="hidden-md-and-up"
+                :style="{marginTop: '56px', maxHeight: '48px', zIndex: '9999'}"
+        >
+            <v-tab
+                    v-for="(tab, index) in tabs"
+                    :key="index"
+                    :to="tab.url"
+                    :style="{
+                        fontSize: '16px',
+                        lineHeight: '20px'
+                    }"
+            >
+                {{tab.title}}
+            </v-tab>
+        </v-tabs>
         <app-phone-registration
                 v-if="! this.isUserLoggedIn() && needRegister"
                 @dialogClose="needRegister = $event, showLogin = false"
         />
+
+        <SpheresListModal
+                class="v-btn--absolute"
+                :style="getStyleForContactBtn"
+        />
+
         <!-- Sizes your content based upon application components -->
         <v-main :style="{backgroundColor: '#f7f7f7'}">
             <!-- If using vue-router -->
@@ -187,6 +213,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import PhoneRegistration from '@/core/components/Auth/PhoneRegistration.vue';
+import SpheresListModal from '@/core/components/Lead/SpheresListModal.vue';
 import LanguageSwitcher from '@/core/components/Utils/LanguageSwitcher.vue';
 import Common from '@/core/mixins/Common';
 import i18n from '@/core/plugins/i18n';
@@ -196,6 +223,7 @@ export default Vue.extend({
     components: {
         appPhoneRegistration: PhoneRegistration,
         LanguageSwitcher,
+        SpheresListModal,
     },
     data: () => ({
         drawer: false,
@@ -231,6 +259,12 @@ export default Vue.extend({
         },
         noToken() {
             return localStorage.getItem('token') === null;
+        },
+        getStyleForContactBtn() {
+            if (i18n.locale === 'en') {
+                return {zIndex: '9999', top: '80%', right: '10%'};
+            }
+            return {zIndex: '9999', top: '80%', left: '10%'};
         },
     },
     methods: {

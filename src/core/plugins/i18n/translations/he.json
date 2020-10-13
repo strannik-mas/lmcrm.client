@@ -1,6 +1,8 @@
 {
     "main_page": {
-        "open_btn": "נחשפו"
+        "open_btn": "נחשפו",
+        "contact_fab": "Contact",
+        "select_sphere_modal_title": "Select sphere"
     },
     "main_menu": {
         "logout": "יציאה",

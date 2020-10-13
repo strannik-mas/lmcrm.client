@@ -1,6 +1,7 @@
 <template>
     <v-container>
-        <video id="bgvid" playsinline autoplay muted loop>
+        <video class="bgvid" playsinline autoplay muted loop preload="auto">
+            <source :src="'/video/contact.mp4'" type="video/mp4">
             <source :src="'/video/panda.mp4'" type="video/mp4">
         </video>
     </v-container>
@@ -11,7 +12,7 @@ export default {};
 </script>
 
 <style scoped>
-    video {
+    .bgvid {
         margin-top: 56px;
         position: fixed;
         top: 50%;
