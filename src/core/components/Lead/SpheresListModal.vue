@@ -16,16 +16,26 @@
                 </v-btn>
             </template>
             <v-card>
-                <v-card-title class="headline">
-                    <span>{{$t("main_page.select_sphere_modal_title")}}</span>
+                <div class="d-flex">
                     <v-spacer/>
                     <v-btn icon light @click="dialogActivator = false">
                         <v-icon>mdi-close</v-icon>
-                    </v-btn>
+                    </v-btn></div>
+                <v-card-title class="headline text-center d-block mt-n8">
+                    <span>{{$t("main_page.select_sphere_modal_title")}}</span>
                 </v-card-title>
+                <v-text-field
+                    v-model="search"
+                    rounded
+                    prepend-inner-icon="mdi-magnify"
+                    :placeholder="$t('main_page.select_sphere_modal_search')"
+                />
                 <v-list>
-                    <template v-for="sphere of spheres">
-                        <v-list-item :key="sphere.sphere.id">
+                    <template v-for="sphere of filteredSpheres">
+                        <v-list-item
+                                :key="sphere.sphere.id"
+                                @click="redirectToSphereForm(sphere.sphere.id)"
+                        >
                             <v-list-item-content class="text-center">
                                 <v-list-item-title>{{sphere.sphere.name}}</v-list-item-title>
                             </v-list-item-content>
@@ -37,21 +47,50 @@
                 </v-list>
             </v-card>
         </v-dialog>
+        <PhoneRegistration
+                v-if="! this.isUserLoggedIn() && needRegister"
+                @dialogClose="needRegister = $event"
+        />
     </v-row>
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import Common from '@/core/mixins/Common';
+import PhoneRegistration from '@/core/components/Auth/PhoneRegistration.vue';
+import {SphereArr} from '@/core/store/sphere/types';
 
 export default Vue.extend({
+    components: {PhoneRegistration},
     data() {
         return {
             dialogActivator: false,
             needRegister: false,
+            search: '',
+            filteredSpheres: [],
         };
     },
-    computed: {
-        spheres() {
-            return this.$store.getters['sphere/getUniversalSpheres'];
+    mixins: [Common],
+    methods: {
+        filterSpheres(searchStr: string) {
+            let fSpheres = this.$store.getters['sphere/getUniversalSpheres'];
+            if (searchStr.length > 0) {
+                fSpheres = fSpheres.filter((sphere: SphereArr) => sphere.sphere.name.includes(searchStr, 0));
+            }
+            return fSpheres;
+        },
+        redirectToSphereForm(sphereId: number) {
+            this.needRegister = true;
+            this.dialogActivator = false;
+            localStorage.setItem('sphereRoute', '/create/lead/' + sphereId);
+            this.$router.push('/create/lead/' + sphereId);
+        },
+    },
+    created() {
+        this.filteredSpheres = this.filterSpheres(this.search);
+    },
+    watch: {
+        search(val) {
+            this.filteredSpheres = this.filterSpheres(val);
         },
     },
 });
@@ -95,11 +134,11 @@ export default Vue.extend({
         top: $topDot;
         height: $widthDot;
         width: $widthDot;
-        background: $fontColor;
+        background: lighten($fontColor, 30%);
         border-radius: 1em;
         border: .25em solid white;
         box-shadow: 0 0 .7em white,
-        0 0 2em $fontColor;
+        0 0 2em lighten($fontColor, 30%);
     }
     .atomBtn .dot,
     .atomBtn:hover .dot,
