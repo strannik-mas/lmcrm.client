@@ -9,6 +9,8 @@
                         v-bind="attrs"
                         v-on="on"
                         text
+                        :loading="loading"
+                        :disabled="loading"
                 >
                     <v-icon>mdi-format-list-checks</v-icon>
                     {{$t('main_page.contact_fab')}}
@@ -66,31 +68,25 @@ export default Vue.extend({
             dialogActivator: false,
             needRegister: false,
             search: '',
-            filteredSpheres: [],
         };
     },
     mixins: [Common],
     methods: {
-        filterSpheres(searchStr: string) {
-            let fSpheres = this.$store.getters['sphere/getUniversalSpheres'];
-            if (searchStr.length > 0) {
-                fSpheres = fSpheres.filter((sphere: SphereArr) => sphere.sphere.name.includes(searchStr, 0));
-            }
-            return fSpheres;
-        },
         redirectToSphereForm(sphereId: number) {
-            this.needRegister = true;
-            this.dialogActivator = false;
+            this.$data.needRegister = true;
+            this.$data.dialogActivator = false;
             localStorage.setItem('sphereRoute', '/create/lead/' + sphereId);
             this.$router.push('/create/lead/' + sphereId);
         },
     },
-    created() {
-        this.filteredSpheres = this.filterSpheres(this.search);
-    },
-    watch: {
-        search(val) {
-            this.filteredSpheres = this.filterSpheres(val);
+    computed: {
+        filteredSpheres() {
+            let fSpheres = this.$store.getters['sphere/getUniversalSpheres'];
+            //console.log(this.$data.search);
+            if (this.$data.search.length > 0) {
+                fSpheres = fSpheres.filter((sphere: SphereArr) => sphere.sphere.name.includes(this.$data.search, 0));
+            }
+            return fSpheres;
         },
     },
 });
@@ -106,7 +102,7 @@ export default Vue.extend({
     $trX: $btnWidth - $dotWidth;
 
     .atomBtn {
-        border: .15em solid $borderColor;
+        border: .25em solid $borderColor;
         border-radius: 5em;
         color: $fontColor;
         font-weight: bold;

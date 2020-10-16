@@ -1,14 +1,21 @@
+import PhoneRegistration from "*.vue";
 <template>
     <v-container>
         <video class="bgvid" playsinline autoplay muted loop preload="auto">
             <source :src="'/video/contact.mp4'" type="video/mp4">
-            <source :src="'/video/panda.mp4'" type="video/mp4">
         </video>
+        <CircularSpinner v-if="loading"/>
     </v-container>
 </template>
 
 <script>
-export default {};
+import Common from '@/core/mixins/Common';
+import CircularSpinner from '@/core/components/Utils/CircularSpinner.vue';
+
+export default {
+    components: {CircularSpinner},
+    mixins: [Common],
+};
 </script>
 
 <style scoped>
@@ -23,5 +30,6 @@ export default {};
         height: auto;
         transform: translateX(-50%) translateY(-50%);
         transition: 1s opacity;
+        filter: grayscale(10%) blur(2px);
     }
 </style>
