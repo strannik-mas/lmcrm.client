@@ -11,7 +11,7 @@
             <v-divider :inset="true"></v-divider>
             <template v-for="document in documents">
                 <v-list-item :key="document.id">
-                        <v-list-item-content>
+                        <v-list-item-content class="hidden-sm-and-down">
                             <v-btn
                                     text
                                     color="indigo"
@@ -22,6 +22,21 @@
                             >
                                 <v-icon light large>mdi-file-document-outline</v-icon>
                                 <v-list-item-title v-text="sliceString(document.name, 12)"/>
+                            </v-btn>
+                        </v-list-item-content>
+
+                        <v-list-item-content class="hidden-md-and-up">
+                            <v-btn
+                                    text
+                                    color="indigo"
+                                    class="ma-0 pa-0"
+                                    target="_blank"
+                                    :href="document.url"
+                                    :block="true"
+                                    small
+                            >
+                                <v-icon light small>mdi-file-document-outline</v-icon>
+                                <v-list-item-subtitle v-text="sliceString(document.name, 10)"/>
                             </v-btn>
                         </v-list-item-content>
 

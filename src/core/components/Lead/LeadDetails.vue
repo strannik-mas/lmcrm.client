@@ -19,6 +19,7 @@
                 md="12"
                 sm="12"
                 xs="12"
+                class="col__details"
                 >
                 <v-card
                         v-if="agents && agents.length > 0"
@@ -38,10 +39,11 @@
                                 </v-list-item-avatar>
 
                                 <v-list-item-content>
-                                    <v-list-item-title class="col-10 text-truncate" v-text="agent.name"/>
+                                    <v-list-item-title v-text="agent.name"/>
+                                    <v-list-item-subtitle v-text="agent.company" class="hidden-md-and-up"/>
                                 </v-list-item-content>
 
-                                <v-list-item-content>
+                                <v-list-item-content class="hidden-sm-and-down mr-2 ml-2">
                                     <v-list-item-title v-text="agent.company"></v-list-item-title>
                                 </v-list-item-content>
 
@@ -200,6 +202,10 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+    .col__details {
+        flex-basis: auto;
+    }
+
     .lead__actions {
         max-width: 600px;
         margin: auto;

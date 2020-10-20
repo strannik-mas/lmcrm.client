@@ -81,9 +81,11 @@
                         :to="tab.url"
                         :disabled="tab.url === '/scheduler'"
                         :style="{
-                        fontSize: '16px',
-                        lineHeight: '20px'
-                    }"
+                            margin: '0',
+                            padding: '0',
+                            fontSize: '16px',
+                            lineHeight: '20px'
+                        }"
                 >
                     {{tab.title}}
                 </v-tab>
@@ -189,6 +191,8 @@
                     :to="tab.url"
                     :disabled="tab.url === '/scheduler'"
                     :style="{
+                        margin: '0',
+                        padding: '0',
                         fontSize: '16px',
                         lineHeight: '20px'
                     }"
@@ -208,7 +212,7 @@
         />
 
         <!-- Sizes your content based upon application components -->
-        <v-main :style="{backgroundColor: '#f7f7f7'}">
+        <v-main :style="{backgroundColor: '#f7f7f7'}" class="main__block">
             <!-- If using vue-router -->
             <router-view/>
         </v-main>
@@ -267,9 +271,9 @@ export default Vue.extend({
         },
         getStyleForContactBtn() {
             if (i18n.locale === 'en') {
-                return {zIndex: '9999', top: '80vh', right: '100px'};
+                return {zIndex: '9', top: '80vh', right: '100px'};
             }
-            return {zIndex: '9999', top: '80vh', left: '100px'};
+            return {zIndex: '9', top: '80vh', left: '100px'};
         },
     },
     methods: {
@@ -286,6 +290,12 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+    @media only screen and (max-width: 960px) {
+        .main__block {
+            padding: 0 !important;
+        }
+    }
+
     .header__logo {
         /*width: 150px;*/
         height: 40px;

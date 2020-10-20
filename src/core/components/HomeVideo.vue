@@ -1,6 +1,12 @@
 import PhoneRegistration from "*.vue";
 <template>
     <v-container>
+        <v-overlay
+                absolute
+                :opacity="0.45"
+                color="white"
+                class="video__overlay"
+        />
         <video class="bgvid" playsinline autoplay muted loop preload="auto">
             <source :src="'/video/contact.mp4'" type="video/mp4">
         </video>
@@ -18,7 +24,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .bgvid {
         margin-top: 56px;
         position: fixed;
@@ -30,6 +36,6 @@ export default {
         height: auto;
         transform: translateX(-50%) translateY(-50%);
         transition: 1s opacity;
-        filter: grayscale(10%) blur(2px);
+        /*filter: grayscale(10%) blur(2px);*/
     }
 </style>

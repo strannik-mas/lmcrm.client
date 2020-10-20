@@ -27,6 +27,7 @@
                     <span>{{$t("main_page.select_sphere_modal_title")}}</span>
                 </v-card-title>
                 <v-text-field
+                    v-if="spheres.length > 10"
                     v-model="search"
                     rounded
                     prepend-inner-icon="mdi-magnify"
@@ -80,6 +81,9 @@ export default Vue.extend({
         },
     },
     computed: {
+        spheres() {
+            return this.$store.getters['sphere/getUniversalSpheres'];
+        },
         filteredSpheres() {
             let fSpheres = this.$store.getters['sphere/getUniversalSpheres'];
             //console.log(this.$data.search);
@@ -132,8 +136,8 @@ export default Vue.extend({
         width: $widthDot;
         background: lighten($fontColor, 30%);
         border-radius: 1em;
-        border: .25em solid white;
-        box-shadow: 0 0 .7em white,
+        border: .25em solid #f1f8e9;
+        box-shadow: 0 0 .7em #D2D2D2,
         0 0 2em lighten($fontColor, 30%);
     }
     .atomBtn .dot,
